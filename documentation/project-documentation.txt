@@ -1,0 +1,278 @@
+# KALI LINUX CYBERSECURITY VIRTUAL LAB
+## Project Documentation
+
+### 1. PROJECT OVERVIEW
+
+This project involved setting up and configuring a Kali Linux virtual machine using Oracle VirtualBox to establish a functional cybersecurity lab environment.
+
+The lab was designed to provide a controlled environment for learning Linux administration, network configuration, connectivity testing, and virtualization.
+
+The configuration included creating a NAT Network, assigning a static IPv4 address to Kali Linux, enabling internet access, and establishing communication and file-sharing capabilities between the Windows host and Kali Linux guest operating system.
+
+### 2. PROJECT OBJECTIVES
+
+The main objectives of this project were:
+
+- Set up a Kali Linux virtual machine using Oracle VirtualBox.
+- Create a dedicated NAT Network.
+- Configure a static IPv4 address for Kali Linux.
+- Configure the default gateway and DNS servers.
+- Establish and verify network connectivity.
+- Test internet access and DNS resolution.
+- Enable bidirectional clipboard sharing.
+- Enable drag-and-drop functionality.
+- Configure a shared folder between Windows and Kali Linux.
+- Verify that the virtual lab environment was functioning correctly.
+
+### 3. LAB ENVIRONMENT
+
+The following tools and configurations were used:
+
+| Component | Configuration |
+|---|---|
+| Host operating system | Windows |
+| Virtualization software | Oracle VirtualBox 7.2.10 |
+| Guest operating system | Kali Linux |
+| Network name | CyberLab |
+| Network type | NAT Network |
+| Network subnet | 10.0.0.0/24 |
+| Kali Linux IP address | 10.0.0.2/24 |
+| Default gateway | 10.0.0.1 |
+| Primary DNS server | 1.1.1.1 |
+| Secondary DNS server | 8.8.8.8 |
+| DHCP | Disabled |
+
+### 4. NAT NETWORK CONFIGURATION
+
+A NAT Network named CyberLab was created in Oracle VirtualBox.
+
+The network was configured using the following parameters:
+
+- Network name: CyberLab
+- Network address: 10.0.0.0/24
+- Gateway address: 10.0.0.1
+- DHCP: Disabled
+
+The Kali Linux virtual machine was connected to this NAT Network through its network adapter settings.
+
+Disabling DHCP allowed the Kali Linux machine to use a manually configured static IP address.
+
+### 5. STATIC IP CONFIGURATION
+
+The Kali Linux network interface was configured with a static IPv4 address using NetworkManager.
+
+The existing connection profile, Wired connection 1, was modified using the nmcli command-line utility.
+
+The following commands were executed:
+
+sudo nmcli connection modify "Wired connection 1" ipv4.addresses 10.0.0.2/24
+
+sudo nmcli connection modify "Wired connection 1" ipv4.gateway 10.0.0.1
+
+sudo nmcli connection modify "Wired connection 1" ipv4.dns "1.1.1.1 8.8.8.8"
+
+sudo nmcli connection modify "Wired connection 1" ipv4.method manual
+
+sudo nmcli connection up "Wired connection 1"
+
+The configuration was verified using:
+
+ip addr show eth0
+
+The output confirmed that the Kali Linux network interface had been assigned the address 10.0.0.2/24.
+
+### 6. DEFAULT GATEWAY AND ROUTING CONFIGURATION
+
+The routing table was checked using:
+
+ip route
+
+The output confirmed the following default route:
+
+default via 10.0.0.1 dev eth0
+
+This established 10.0.0.1 as the default gateway for the Kali Linux virtual machine.
+
+The route confirmed that traffic destined for external networks would be forwarded through the configured gateway.
+
+### 7. NETWORK CONNECTIVITY TESTING
+
+Several connectivity tests were performed to verify the network configuration.
+
+#### 7.1 Gateway Connectivity
+
+Command:
+
+ping -c 4 10.0.0.1
+
+Result:
+
+- Packets transmitted: 4
+- Packets received: 4
+- Packet loss: 0%
+
+The test confirmed successful communication between Kali Linux and the NAT Network gateway.
+
+#### 7.2 Internet Connectivity
+
+Command:
+
+ping -c 4 1.1.1.1
+
+Result:
+
+- Packets transmitted: 4
+- Packets received: 3
+- Packet loss: 25%
+
+The test confirmed that Kali Linux could reach the external IP address. One packet was lost during the test.
+
+#### 7.3 DNS Resolution
+
+Command:
+
+ping -c 4 google.com
+
+Result:
+
+- Google successfully resolved to an IP address.
+- Packets transmitted: 4
+- Packets received: 4
+- Packet loss: 0%
+
+The test confirmed successful DNS resolution and connectivity to the resolved address.
+
+### 8. SHARED FOLDER CONFIGURATION
+
+A shared folder was configured in VirtualBox to enable file access between the Windows host and Kali Linux guest.
+
+The Windows Downloads folder was selected as the shared folder.
+
+The following settings were used:
+
+- Folder name: Downloads
+- Auto-mount: Enabled
+- Read-only: Disabled
+- Make global: Disabled
+
+The folder was successfully mounted in Kali Linux at:
+
+/media/sf_Downloads
+
+The shared folder was verified using:
+
+mount | grep vboxsf
+
+The output confirmed:
+
+Downloads on /media/sf_Downloads type vboxsf
+
+The folder was also accessed and its contents listed from Kali Linux.
+
+### 9. VIRTUALBOX GUEST ADDITIONS
+
+VirtualBox Guest Additions drivers and utilities were already present in Kali Linux.
+
+The loaded kernel modules were verified using:
+
+lsmod | grep -E 'vboxguest|vboxsf'
+
+The output confirmed that the vboxguest and vboxsf modules were loaded.
+
+The Guest Additions utility version was checked using:
+
+VBoxClient --version
+
+The reported version was 7.2.8_Debianr173730.
+
+### 10. CLIPBOARD AND DRAG-AND-DROP CONFIGURATION
+
+The following VirtualBox integration features were enabled:
+
+- Shared Clipboard: Bidirectional
+- Drag and Drop: Bidirectional
+
+Both features were tested.
+
+#### Clipboard Test
+
+Text was copied from Kali Linux and pasted into Windows Notepad.
+
+Text was also copied from Windows Notepad and pasted into Mousepad in Kali Linux.
+
+Result: Successful in both directions.
+
+#### Drag-and-Drop Test
+
+A text file named CyberLab-test.txt was created on the Windows desktop.
+
+The file was dragged from Windows into the Kali Linux desktop.
+
+Result: Successful.
+
+These tests confirmed that clipboard sharing and Windows-to-Kali drag-and-drop were functioning.
+
+### 11. FINAL VERIFICATION SUMMARY
+
+The following checks were completed:
+
+| Configuration or Test | Result |
+|---|---|
+| VirtualBox NAT Network | Successful |
+| Static IPv4 configuration | Successful |
+| Default gateway configuration | Successful |
+| Gateway connectivity | Successful |
+| Internet connectivity | Successful, with 25% packet loss in one test |
+| DNS resolution | Successful |
+| Shared folder mounting | Successful |
+| Guest Additions modules | Loaded |
+| Bidirectional clipboard | Successful |
+| Windows-to-Kali drag-and-drop | Successful |
+
+### 12. CHALLENGES AND TROUBLESHOOTING
+
+During the setup, the following areas required attention:
+
+- Configuring a NAT Network with DHCP disabled.
+- Assigning a static IPv4 address through NetworkManager.
+- Verifying the default gateway and routing table.
+- Confirming internet connectivity and DNS resolution.
+- Establishing communication between the Windows host and Kali Linux guest.
+- Verifying shared folder access and VirtualBox integration features.
+
+The configuration was verified through terminal commands and practical tests.
+
+### 13. SKILLS DEMONSTRATED
+
+This project provided practical experience in:
+
+- Kali Linux fundamentals
+- Linux command-line administration
+- Oracle VirtualBox configuration
+- Virtualization concepts
+- IPv4 addressing and subnetting
+- Static IP configuration
+- NAT networking
+- Network routing
+- DNS configuration and testing
+- Network connectivity troubleshooting
+- Virtual machine integration
+- Shared folder configuration
+
+### 14. CONCLUSION
+
+The Kali Linux cybersecurity virtual lab was successfully configured using Oracle VirtualBox.
+
+The project demonstrated the ability to configure a virtual network, assign a static IP address, establish gateway and internet connectivity, verify DNS resolution, and enable communication and file sharing between a Windows host and Kali Linux guest.
+
+The hands-on exercise strengthened practical understanding of Linux administration, networking, virtualization, and troubleshooting.
+
+It also established a foundation for future cybersecurity exercises, including network analysis, reconnaissance, vulnerability assessment, and security testing in authorized lab environments.
+
+### 15. SECURITY AND ETHICAL CONSIDERATIONS
+
+This virtual lab was created for educational and practical learning purposes.
+
+Any future penetration testing, vulnerability assessment, or security research will be conducted only within systems and environments for which explicit authorization has been granted.
+
+Personal files and sensitive information from the shared Windows folder will not be published in the project repository.
