@@ -1,17 +1,20 @@
-# Kali Linux Cybersecurity Virtual Lab
+# NetworkWalks B084 – Week 1: Cybersecurity Lab Setup
 
-A hands-on cybersecurity lab project involving the setup and configuration of a Kali Linux virtual machine using Oracle VirtualBox.
+A hands-on cybersecurity lab project focused on setting up and configuring a Kali Linux virtual machine using Oracle VirtualBox.
 
 ## Project Overview
 
-This project focused on building a functional virtual lab environment with network connectivity, static IP addressing, internet access, and file-sharing capabilities between a Windows host and Kali Linux guest operating system.
+This project involved building a functional cybersecurity lab environment using Kali Linux as the guest operating system and Windows as the host.
 
-## Objectives
+The setup included configuring virtual networking, assigning a static IP address, establishing internet connectivity, verifying DNS resolution, and enabling file sharing and integration between the host and guest systems.
 
+## Project Objectives
+
+- Set up a Kali Linux virtual machine using Oracle VirtualBox.
 - Configure a VirtualBox NAT Network.
 - Assign Kali Linux a static IPv4 address.
 - Configure the default gateway and DNS servers.
-- Test gateway and internet connectivity.
+- Test network and internet connectivity.
 - Verify DNS resolution.
 - Enable bidirectional clipboard sharing.
 - Enable drag-and-drop functionality.
@@ -21,13 +24,13 @@ This project focused on building a functional virtual lab environment with netwo
 
 | Component | Configuration |
 |---|---|
-| Host OS | Windows |
+| Host Operating System | Windows |
 | Virtualization Software | Oracle VirtualBox 7.2.10 |
-| Guest OS | Kali Linux |
+| Guest Operating System | Kali Linux |
 | NAT Network | CyberLab |
 | Network Type | NAT Network |
 | Subnet | 10.0.0.0/24 |
-| Kali IP Address | 10.0.0.2 |
+| Kali Linux IP Address | 10.0.0.2 |
 | Default Gateway | 10.0.0.1 |
 | Primary DNS | 1.1.1.1 |
 | Secondary DNS | 8.8.8.8 |
@@ -53,55 +56,55 @@ This project focused on building a functional virtual lab environment with netwo
 
 ## Network Configuration
 
-A NAT Network named CyberLab was created with DHCP disabled.
+A NAT Network named `CyberLab` was created in Oracle VirtualBox with DHCP disabled.
 
 Kali Linux was configured with a static IPv4 address using NetworkManager.
 
+The following commands were used:
+
 ```bash
 sudo nmcli connection modify "Wired connection 1" ipv4.addresses 10.0.0.2/24
-
 sudo nmcli connection modify "Wired connection 1" ipv4.gateway 10.0.0.1
-
 sudo nmcli connection modify "Wired connection 1" ipv4.dns "1.1.1.1 8.8.8.8"
-
 sudo nmcli connection modify "Wired connection 1" ipv4.method manual
-
 sudo nmcli connection up "Wired connection 1"
 ```
 
 ## Verification Commands
 
-Check network interface:
+The following commands were used to verify the network configuration and connectivity.
+
+**Check the network interface:**
 
 ```bash
 ip addr show eth0
 ```
 
-Check routing table:
+**Check the routing table:**
 
 ```bash
 ip route
 ```
 
-Test gateway connectivity:
+**Test gateway connectivity:**
 
 ```bash
 ping -c 4 10.0.0.1
 ```
 
-Test internet connectivity:
+**Test internet connectivity:**
 
 ```bash
 ping -c 4 1.1.1.1
 ```
 
-Test DNS resolution:
+**Test DNS resolution:**
 
 ```bash
 ping -c 4 google.com
 ```
 
-Verify shared folder:
+**Verify shared folder mounting:**
 
 ```bash
 mount | grep vboxsf
@@ -123,7 +126,9 @@ mount | grep vboxsf
 
 The Windows Downloads folder was configured as a VirtualBox shared folder and mounted in Kali Linux at:
 
-`/media/sf_Downloads`
+```text
+/media/sf_Downloads
+```
 
 The VirtualBox shared filesystem driver (`vboxsf`) was verified.
 
@@ -131,7 +136,7 @@ The VirtualBox shared filesystem driver (`vboxsf`) was verified.
 
 VirtualBox Guest Additions drivers were present and loaded.
 
-The following features were enabled and tested:
+The following integration features were enabled and tested:
 
 - Bidirectional clipboard sharing.
 - Drag-and-drop from Windows to Kali Linux.
